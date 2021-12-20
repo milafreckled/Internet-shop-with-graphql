@@ -30,7 +30,7 @@ export default function Reducer(state = shopAppState, action) {
             0,
             state.cartItems.findIndex(
               (i) => i?.product?.id === action.payload?.product?.id
-            )
+            ) + 1
           )
           .concat(
             state.cartItems.slice(
@@ -44,7 +44,7 @@ export default function Reducer(state = shopAppState, action) {
     case "CALCULATE_TOTAL": {
       return {
         ...state,
-        total: state.total + action.payload,
+        total: Math.abs(state.total + action.payload),
       };
     }
     case "RECALCULATE_TOTAL": {

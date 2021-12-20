@@ -12,6 +12,7 @@ import {
 } from "../redux/actions";
 import { sizeMap } from "../features/sizeMap";
 import { handleAttributeClick, handleQuantity } from "./functions";
+
 class ProductInOverlay extends Component {
   constructor(props) {
     super(props);
@@ -53,7 +54,7 @@ class ProductInOverlay extends Component {
       & > .attributes-wrapper {
         display: flex;
         gap: 4px;
-        margin-top: ;
+        margin-top: 20px;
       }
       & > .attributes-wrapper div {
         width: auto;
@@ -80,18 +81,9 @@ class ProductInOverlay extends Component {
       justify-content: space-between;
       position: relative;
       height: 100%;
-      max-height: 137px;
-      & > .plus-box {
-        width: 24px;
-        height: 24px;
-        border: 1px solid #1d1f22;
-        box-sizing: border-box;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-      }
-      & > .minus-box {
+      min-height: 137px;
+      & > .plus-box,
+      .minus-box {
         width: 24px;
         height: 24px;
         border: 1px solid #1d1f22;

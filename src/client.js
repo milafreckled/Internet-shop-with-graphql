@@ -21,5 +21,10 @@ export const client = new ApolloClient({
       },
     },
   }),
-  fetchPolicy: "cache-and-network",
+  defaultOptions: {
+    query: {
+      fetchPolicy: "network-only",
+      errorPolicy: "all",
+    },
+  },
 });

@@ -112,26 +112,13 @@ class ProductInOverlay extends Component {
       position: relative;
       align-self: center;
       left: -2%;
-      & > .plus-box {
-        position: absolute;
-        top: 0%;
+      & > .plus-box,
+      .minus-box {
         width: 45px;
         height: 45px;
         border: 1px solid #1d1f22;
         box-sizing: border-box;
         text-align: center;
-        overflow: visible;
-        cursor: pointer;
-      }
-      & > .minus-box {
-        position: absolute;
-        top: calc(100% - 45px);
-        width: 45px;
-        height: 45px;
-        border: 1px solid #1d1f22;
-        box-sizing: border-box;
-        text-align: center;
-        overflow: visible;
         cursor: pointer;
       }
       & > .quantity {

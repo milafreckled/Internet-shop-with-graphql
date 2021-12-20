@@ -12,7 +12,6 @@ import { Link } from "react-router-dom";
 class CartOverlay extends Component {
   constructor(props) {
     super(props);
-    console.log(this.props.cartItems);
     this.state = { items: [] }; // unique items from cart items
   }
 
@@ -49,7 +48,8 @@ class CartOverlay extends Component {
     const Overlay = styled.div`
       width: fit-content;
       min-width: 300px;
-      height: 540px;
+      height: auto;
+      max-height: 540px;
       display: flex;
       flex-direction: column;
       overflow-y: scroll;
@@ -69,8 +69,6 @@ class CartOverlay extends Component {
       padding: 16px 32px;
       width: 145px;
       height: 43px;
-      left: 0px;
-      top: 0px;
       box-sizing: border-box;
       flex: none;
       order: 0;
@@ -109,7 +107,7 @@ class CartOverlay extends Component {
     return (
       <Overlay>
         <Title className="left">
-          My Bag,
+          My Bag,{" "}
           <span>
             {cartItems.length} {cartItems.length !== 1 ? `items` : `item`}
           </span>
