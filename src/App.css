@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&family=Roboto&family=Roboto+Condensed:wght@700&family=Source+Sans+Pro&display=swap');
+:root{
+  --category-name-font: normal 400 42px/67.2px 'Raleway', sans-serif;
+  --product-name-font: normal 300 18px/28.8px 'Raleway', sans-serif;
+  --product-description-name-font: normal 600 30px/27px 'Raleway', sans-serif;
+  --product-description-subname-font: normal 400 30px/27px 'Raleway', sans-serif;
+  --price-regular-font: normal 500 18px/28.8px 'Raleway', sans-serif;
+  --price-bold-font: normal 700 24px/18px 'Raleway', sans-serif;
+  --navigation-regular-font: normal 400 16px/19.2px 'Raleway', sans-serif;
+  --navigation-active-font: normal 600 16px/19.2px 'Raleway', sans-serif;
+  --cart-name-font: normal 700 32px/40px 'Raleway', sans-serif;
+  --button-font: normal 600 16px/19.2px 'Raleway', sans-serif;
+  --attribute-font: normal 400 16px/18px 'Source Sans Pro', sans-serif;
+  --size-price-font: normal 700 18px/18px 'Roboto Condensed', sans-serif;
+  --product-description-font: normal 400 16px/25.59px 'Roboto', sans-serif;
+  --primary-color: #5ECE7B;
+  --text-color: #1D1F22;  
+  --disabled-color: #E5E5E5;
+  --my-bag-bold-font: normal 700 16px/25.6px 'Raleway', sans-serif;
+  --my-bag-normal-font:normal 500 16px/25.6px 'Raleway', sans-serif;
+}
+.App {
+  box-sizing: border-box;
+  margin: 0;
+  overflow-x: hidden;
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+a{
+  text-decoration: none;
+}
+
