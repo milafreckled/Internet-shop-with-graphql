@@ -62,7 +62,7 @@ export const Title = styled.p`
 export const Navbar = styled.nav`
   display: flex;
   overflow: hidden;
-  padding: 24px 101px 0;
+  padding: 28px 101px 0;
   left: 0;
   top: 0;
   min-height: 80px;
@@ -137,7 +137,7 @@ export const CartBadge = styled.div`
   justify-content: center;
 `;
 export const Logo = styled.div`
-  position: relative;
+  position: absolute;
   align-self: center;
   left: 50%;
   right: 50%;
@@ -145,7 +145,7 @@ export const Logo = styled.div`
   display: block;
   width: 41px;
   height: 41px;
-  top: 23px;
+  top: 60px;
 `;
 export const CategoryLink = styled.a`
   display: block;

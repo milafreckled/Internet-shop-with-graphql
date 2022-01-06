@@ -75,8 +75,7 @@ class ProductInOverlay extends PureComponent {
                         }}
                       ></div>
                     ))
-                  : a.name === "Size"
-                  ? a?.items.map((item) => (
+                  : a?.items.map((item) => (
                       <div
                         className={
                           item.displayValue === activeAttribute ? "active" : ""
@@ -90,19 +89,6 @@ class ProductInOverlay extends PureComponent {
                         }
                       >
                         {sizeMap[item.displayValue] || item.displayValue}
-                      </div>
-                    ))
-                  : a?.items.map((item) => (
-                      <div
-                        onClick={() =>
-                          handleAttributeClick(
-                            this,
-                            product.id,
-                            item.displayValue
-                          )
-                        }
-                      >
-                        {item.displayValue}
                       </div>
                     ))
               )}

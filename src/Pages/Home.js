@@ -9,7 +9,7 @@ import { mapStateToProps } from "../redux/mapStateToProps";
 class Home extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = { productList: [], loading: false, error: "" };
+    this.state = { productList: [] };
     this.updateProductList = this.updateProductList.bind(this);
   }
   updateProductList() {
@@ -27,11 +27,7 @@ class Home extends PureComponent {
       );
     }
   }
-  componentDidUpdate(prevProps) {
-    if (this.props.activeCategory !== prevProps.activeCategory) {
-      this.updateProductList();
-    }
-  }
+
   componentDidMount() {
     this.updateProductList();
   }
@@ -64,4 +60,9 @@ class Home extends PureComponent {
     );
   }
 }
-export default connect(mapStateToProps, null)(Home);
+
+function checkCategory(prevProps, nextProps) {
+  return prevProps.activeCategory !== nextProps.activeCategory;
+}
+
+export default connect(mapStateToProps, null)(React.memo(Home, checkCategory));

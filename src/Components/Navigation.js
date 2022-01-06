@@ -81,7 +81,7 @@ class Navigation extends PureComponent {
       <Navbar>
         <CategoriesWrapper>
           <CategoryLink
-            to="/"
+            href="/"
             onClick={handleCategory("all")}
             className={activeCategory === "all" && "active"}
           >
@@ -90,7 +90,7 @@ class Navigation extends PureComponent {
           {categories.map((category) => (
             <CategoryLink
               key={category?.name}
-              to={`/${category?.name}`}
+              href={`/${category?.name}`}
               onClick={handleCategory(category?.name)}
               className={activeCategory === category?.name && "active"}
             >

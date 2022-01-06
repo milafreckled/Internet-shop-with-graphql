@@ -13,7 +13,7 @@ import {
   ImageColumn,
   ProductImage,
   Brand,
-} from "./styles/ProductDescription";
+} from "./styles";
 import Navigation from "../Components/Navigation";
 import { sizeMap } from "../features/sizeMap";
 import { connect } from "react-redux";
@@ -48,7 +48,9 @@ class ProductDescription extends PureComponent {
           (_, idx) => idx !== this.state.pictureIdx
         ),
       });
-      this.descriptionRef.current.innerHTML = data.product?.description;
+      if (data.product?.description) {
+        this.descriptionRef.current.innerHTML = data.product.description;
+      }
     });
   }
 
@@ -58,8 +60,6 @@ class ProductDescription extends PureComponent {
     const { currency } = this.props;
     const { pictureIdx, activeAttribute, productData, sideImages, id } =
       this.state;
-
-    // TODO: implement main image swicth on click
     return (
       <>
         <Navigation />
@@ -79,41 +79,47 @@ class ProductDescription extends PureComponent {
           <DescriptionColumn>
             <Brand>{product?.brand}</Brand>
             <Name>{product?.name}</Name>
-            <DetailsLine>size:</DetailsLine>
-            <AttributesWrapper>
-              {product?.attributes.slice(0, 1).map((a) =>
-                a.name !== "Color"
-                  ? a?.items?.map((item) => (
-                      <AttributeBox
-                        key={item?.displayValue}
-                        onClick={() =>
-                          handleAttributeClick(this, id, item.displayValue)
-                        }
-                        className={
-                          item.displayValue === activeAttribute ? "active" : ""
-                        }
-                      >
-                        {sizeMap[item?.displayValue] || item?.displayValue}
-                      </AttributeBox>
-                    ))
-                  : a?.items.map((item) => (
-                      <AttributeBox
-                        key={item?.displayValue}
-                        style={{
-                          backgroundColor: item.displayValue.toLowerCase(),
-                        }}
-                        onClick={() =>
-                          handleAttributeClick(this, id, item.displayValue)
-                        }
-                        className={
-                          item.displayValue === activeAttribute
-                            ? "active-color"
-                            : ""
-                        }
-                      ></AttributeBox>
-                    ))
-              )}
-            </AttributesWrapper>
+            {product?.attributes && (
+              <>
+                <DetailsLine>{product?.attributes[0]?.name}</DetailsLine>
+                <AttributesWrapper>
+                  {product?.attributes.slice(0, 1).map((a) =>
+                    a.name !== "Color"
+                      ? a?.items?.map((item) => (
+                          <AttributeBox
+                            key={item?.displayValue}
+                            onClick={() =>
+                              handleAttributeClick(this, id, item.displayValue)
+                            }
+                            className={
+                              item.displayValue === activeAttribute
+                                ? "active"
+                                : ""
+                            }
+                          >
+                            {sizeMap[item?.displayValue] || item?.displayValue}
+                          </AttributeBox>
+                        ))
+                      : a?.items.map((item) => (
+                          <AttributeBox
+                            key={item?.displayValue}
+                            style={{
+                              backgroundColor: item.displayValue.toLowerCase(),
+                            }}
+                            onClick={() =>
+                              handleAttributeClick(this, id, item.displayValue)
+                            }
+                            className={
+                              item.displayValue === activeAttribute
+                                ? "active-color"
+                                : ""
+                            }
+                          ></AttributeBox>
+                        ))
+                  )}
+                </AttributesWrapper>
+              </>
+            )}
             <DetailsLine>Price:</DetailsLine>
             <Price>
               {product?.prices.find((p) => p.currency === currency).amount}

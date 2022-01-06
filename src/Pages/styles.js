@@ -4,6 +4,8 @@ export const PageWrapper = styled.section`
   display: grid;
   grid-template-columns: 97px repeat(2, 1fr);
   margin: 72px 101px 0;
+  position: relative;
+  min-height: calc(100vh - 80px);
 `;
 export const ImageColumn = styled.div`
   display: flex;
@@ -73,7 +75,7 @@ export const ProductImage = styled.div`
   max-width: calc(100% - 97px);
   & img {
     width: 100%;
-    height: 100%;
+    height: auto;
   }
 `;
 // HOME
