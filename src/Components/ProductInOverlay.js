@@ -1,9 +1,15 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
 import { connect } from "react-redux";
 import { mapStateToProps } from "../redux/mapStateToProps";
 import currenciesMap from "../features/currenciesMap";
+import {
+  ProductWrapper,
+  LeftSection,
+  MiddleSection,
+  RightSection,
+} from "./styles";
+
 import {
   addToCart,
   removeFromCart,
@@ -13,122 +19,38 @@ import {
 import { sizeMap } from "../features/sizeMap";
 import { handleAttributeClick, handleQuantity } from "./functions";
 
-class ProductInOverlay extends Component {
+class ProductInOverlay extends PureComponent {
   constructor(props) {
     super(props);
+
     this.state = {
-      activeAttribute: JSON.parse(
-        localStorage.getItem(this.props.data.product?.id)
-      )["attribute"],
-      quantity: JSON.parse(localStorage.getItem(this.props.data.product?.id))[
-        "quantity"
-      ],
+      quantity:
+        JSON.parse(localStorage.getItem(this.props.data.product.id))[
+          "quantity"
+        ] ?? 0,
+      activeAttribute:
+        JSON.parse(localStorage.getItem(this.props.data.product.id))[
+          "attribute"
+        ] ?? "",
     };
   }
+
   render() {
-    const ItemWrapper = styled.div`
-      flex: 50%;
-      display: flex;
-      margin-block: 23px;
-      max-height: 137px;
-    `;
-    const LeftPart = styled.div`
-      flex: 50%;
-      & > .product-name {
-        display: flex;
-        text-align: left;
-        align-items: center;
-        width: 136px;
-        height: 52px;
-        margin-block: 5px;
-        word-wrap: break-word;
-        font: var(--product-name-font);
-      }
-      & > .product-price {
-        width: 52px;
-        height: 26px;
-        margin-top: 10px;
-        text-align: left;
-        font: var(--price-regular-font);
-      }
-      & > .attributes-wrapper {
-        display: flex;
-        gap: 4px;
-        margin-top: 20px;
-      }
-      & > .attributes-wrapper div {
-        width: auto;
-        min-width: 24px;
-        height: 24px;
-        border: 1px solid #1d1f22;
-        box-sizing: border-box;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      & > .attributes-wrapper div.active {
-        background-color: #1d1f22;
-        color: white;
-      }
-      & > .attributes-wrapper div.active-color {
-        border: 2px inset var(--text-color);
-      }
-    `;
-    const MiddlePart = styled.div`
-      flex: 10%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      height: 100%;
-      min-height: 137px;
-      & > .plus-box,
-      .minus-box {
-        width: 24px;
-        height: 24px;
-        border: 1px solid #1d1f22;
-        box-sizing: border-box;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-      }
-      & > .quantity {
-        flex: 60%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 90px;
-        margin: 0 auto;
-        align-self: center;
-        font: var(--price-regular-font);
-      }
-    `;
-    const RightPart = styled.div`
-    flex: 40%;
-    > img {
-      width: 100%;
-      height: 100%;
-      max-width: 105px;
-      max-height: 137px;
-    }
-}`;
-    const currencySign = currenciesMap[this.props.currency];
+    const { currency } = this.props;
+    const { activeAttribute, quantity } = this.state;
+    const currencySign = currenciesMap[currency];
     const product = this.props.data?.product;
     return (
-      this.state.quantity > 0 && (
-        <ItemWrapper key={product?.id}>
-          <LeftPart>
+      quantity > 0 && (
+        <ProductWrapper key={product?.id}>
+          <LeftSection>
             <p className="product-name">
               {product?.brand}
               <br />
               {product?.name}
             </p>
             <p className="product-price">
-              {
-                product?.prices.find((p) => p.currency === this.props.currency)
-                  .amount
-              }
+              {product?.prices.find((p) => p.currency === currency).amount}
               {currencySign}
             </p>
             <div className="attributes-wrapper">
@@ -144,7 +66,7 @@ class ProductInOverlay extends Component {
                           )
                         }
                         className={
-                          item.displayValue === this.state.activeAttribute
+                          item.displayValue === activeAttribute
                             ? "active-color"
                             : ""
                         }
@@ -157,9 +79,7 @@ class ProductInOverlay extends Component {
                   ? a?.items.map((item) => (
                       <div
                         className={
-                          item.displayValue === this.state.activeAttribute
-                            ? "active"
-                            : ""
+                          item.displayValue === activeAttribute ? "active" : ""
                         }
                         onClick={() =>
                           handleAttributeClick(
@@ -187,26 +107,26 @@ class ProductInOverlay extends Component {
                     ))
               )}
             </div>
-          </LeftPart>
-          <MiddlePart>
+          </LeftSection>
+          <MiddleSection>
             <div
               className="plus-box"
               onClick={() => handleQuantity(this, "+", product?.id)}
             >
               +
             </div>
-            <p className="quantity">{this.state.quantity}</p>
+            <p className="quantity">{quantity}</p>
             <div
               className="minus-box"
               onClick={() => handleQuantity(this, "-", product?.id)}
             >
               -
             </div>
-          </MiddlePart>
-          <RightPart>
+          </MiddleSection>
+          <RightSection>
             <img src={product?.gallery[0]} alt={product?.name} />
-          </RightPart>
-        </ItemWrapper>
+          </RightSection>
+        </ProductWrapper>
       )
     );
   }

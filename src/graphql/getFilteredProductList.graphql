@@ -1,0 +1,8 @@
+#import "./productBasicDataFragment.graphql"
+query ($name: String!) {
+  category(input: { title: $name }) {
+    products {
+      ...productBasicData
+    }
+  }
+}

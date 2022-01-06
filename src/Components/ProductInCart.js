@@ -1,6 +1,17 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
+import {
+  SwitchArrow,
+  RightPart,
+  MiddlePart,
+  LeftPart,
+  ItemWrapper,
+  Name,
+  PriceInCart,
+  Brand,
+  AttributeBox,
+  AttributesWrapper,
+} from "./styles";
 import { connect } from "react-redux";
 import { mapStateToProps } from "../redux/mapStateToProps";
 import currenciesMap from "../features/currenciesMap";
@@ -14,9 +25,8 @@ import { sizeMap } from "../features/sizeMap";
 import leftArrow from "../images/arrow-left.png";
 import rightArrow from "../images/arrow-right.png";
 import { handleAttributeClick, handleQuantity } from "./functions";
-import { Link } from "react-router-dom";
 
-class ProductInOverlay extends Component {
+class ProductInCart extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,128 +46,20 @@ class ProductInOverlay extends Component {
     const product = this.props.data?.product;
     const pictureIdx = this.state.pictureIdx;
     const picturesLength = product?.gallery?.length;
-    const Arrow = styled.img`
-      position: absolute;
-      width: 6px;
-      height: 12px;
-      z-index: 1;
-      transform: matrix(-1, 0, 0, 1, 0, 0);
-      &.right {
-        right: 0;
-        left: 90%;
-        top: 50%;
-        transform: translateY(-50%);
-        bottom: 25%;
-      }
-      &.left {
-        left: 10%;
-        right: 25%;
-        top: 50%;
-        transform: translateY(-50%);
-        bottom: 25%;
-      }
-    `;
-    const ItemWrapper = styled.div`
-      display: flex;
-      margin-block: 21px;
-      position: relative;
-    `;
-    const LeftPart = styled.div`
-      flex: 1 1 60%;
-      align-self: center;
-    `;
-    const Brand = styled.h2`
-      margin-block-start: 0;
-      margin-block-end: 0;
-      font: var(--product-description-name-font);
-    `;
-    const Name = styled.h2`
-      font: var(--product-description-subname-font);
-    `;
-    const Price = styled.p`
-      font: var(--price-bold-font);
-    `;
-    const AttributesWrapper = styled.div`
-      display: flex;
-      max-width: 300px;
-      margin-top: 27px;
-    `;
-    const AttributeBox = styled.div`
-      cursor: pointer;
-      width: 63px;
-      border: 1px solid var(--text-color);
-      font: var(--attribute-font);
-      height: 100%;
-      min-height: 45px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-right: 4px;
-      &.active {
-        background: var(--text-color);
-        color: #fff;
-      }
-      &.active-color {
-        border: 2px inset var(--text-color);
-      }
-    `;
-    const MiddlePart = styled.div`
-      flex: 0 0 10%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      height: 100%;
-      min-height: 185px;
-      max-width: 45px;
-      position: relative;
-      align-self: center;
-      left: -2%;
-      & > .plus-box,
-      .minus-box {
-        width: 45px;
-        height: 45px;
-        border: 1px solid #1d1f22;
-        box-sizing: border-box;
-        text-align: center;
-        cursor: pointer;
-      }
-      & > .quantity {
-        flex: 60%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0 auto;
-        align-self: center;
-        font: var(--price-regular-font);
-      }
-    `;
-    const RightPart = styled.div`
-      align-self: center;
-      position: relative;
-      flex: 0 0 30%;
-      max-width: 141px;
-      > .product-img {
-        & img {
-          height: 100%;
-          max-height: 185px;
-          max-width: 141px;
-          float: right;
-        }
-      }
-    `;
+
     return (
       this.state.quantity > 0 && (
         <ItemWrapper>
           <LeftPart>
             <Brand>{product?.brand}</Brand>
             <Name>{product?.name}</Name>
-            <Price>
+            <PriceInCart>
               {
                 product?.prices.find((p) => p.currency === this.props.currency)
                   .amount
               }
               {currenciesMap[this.props.currency]}
-            </Price>
+            </PriceInCart>
             <AttributesWrapper>
               {product?.attributes?.slice(0, 1).map((a) =>
                 a.name === "Color"
@@ -233,7 +135,7 @@ class ProductInOverlay extends Component {
           <RightPart>
             {product?.gallery.length > 1 && (
               <>
-                <Arrow
+                <SwitchArrow
                   className="left"
                   src={leftArrow}
                   onClick={() =>
@@ -245,7 +147,7 @@ class ProductInOverlay extends Component {
                     })
                   }
                 />
-                <Arrow
+                <SwitchArrow
                   className="right"
                   src={rightArrow}
                   onClick={() =>
@@ -260,9 +162,11 @@ class ProductInOverlay extends Component {
               </>
             )}
 
-            <Link className="product-img" to={`/product/${product?.id}`}>
-              <img src={product?.gallery[pictureIdx]} alt={product?.name} />
-            </Link>
+            <img
+              className="product-img"
+              src={product?.gallery[pictureIdx]}
+              alt={product?.name}
+            />
           </RightPart>
         </ItemWrapper>
       )
@@ -270,7 +174,7 @@ class ProductInOverlay extends Component {
   }
 }
 
-ProductInOverlay.propTypes = {
+ProductInCart.propTypes = {
   data: PropTypes.object,
 };
 
@@ -279,4 +183,4 @@ export default connect(mapStateToProps, {
   removeFromCart,
   removeSingleItem,
   calculateTotal,
-})(ProductInOverlay);
+})(ProductInCart);

@@ -18,6 +18,7 @@
   --disabled-color: #E5E5E5;
   --my-bag-bold-font: normal 700 16px/25.6px 'Raleway', sans-serif;
   --my-bag-normal-font:normal 500 16px/25.6px 'Raleway', sans-serif;
+  --out-of-stock-font: normal 400 24px/38px 'Raleway', sans-serif;
 }
 .App {
   box-sizing: border-box;
@@ -31,5 +32,8 @@
 }
 a{
   text-decoration: none;
+}
+a:visited{
+  color: inherit;
 }
 

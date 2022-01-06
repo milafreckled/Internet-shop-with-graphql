@@ -1,0 +1,21 @@
+fragment productDetails on Product {
+  id
+  inStock
+  name
+  brand
+  description
+  gallery
+  category
+  quantity @client
+  attribute @client
+  prices {
+    amount
+    currency
+  }
+  attributes {
+    name
+    items {
+      displayValue
+    }
+  }
+}

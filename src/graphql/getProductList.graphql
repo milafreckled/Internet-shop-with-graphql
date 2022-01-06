@@ -1,0 +1,9 @@
+#import "./productBasicDataFragment.graphql"
+query getProductList {
+  category {
+    name
+    products {
+      ...productBasicData
+    }
+  }
+}

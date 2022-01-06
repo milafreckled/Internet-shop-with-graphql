@@ -1,5 +1,7 @@
 const path = require("path");
-
+const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const HtmlWebpackTemplate = require("html-webpack-template");
 module.exports = function (_env, argv) {
   const isProduction = argv.mode === "production";
   const isDevelopment = !isProduction;
@@ -26,10 +28,27 @@ module.exports = function (_env, argv) {
             },
           },
         },
+        {
+          test: /\.(graphql|gql)$/,
+          exclude: /node_modules/,
+          loader: "graphql-tag/loader",
+        },
+        {
+          test: /\.css$/i,
+          use: ["style-loader", "css-loader"],
+        },
+        {
+          test: /\.(png|jpg)$/,
+          loader: "url-loader",
+        },
       ],
+      resolve: {
+        extensions: [".js", ".jsx"],
+      },
     },
-    resolve: {
-      extensions: [".js", ".jsx"],
-    },
+    plugins: [
+      new webpack.ProgressPlugin(),
+      new HtmlWebpackPlugin({ template: "./public/index.html" }),
+    ],
   };
 };

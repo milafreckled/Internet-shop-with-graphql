@@ -4,12 +4,13 @@ export const getProductList = gql`
     category {
       name
       products {
-        ...productBaseData
+        ...productData
       }
     }
   }
-  fragment productBaseData on Product {
+  fragment productData on Product {
     id
+    inStock
     name
     gallery
     prices {
@@ -22,6 +23,7 @@ export const getProductList = gql`
 export const getProductById = gql`
   query ($id: String!) {
     product(id: $id) {
+      __typename
       ...productDetails
     }
   }
@@ -58,7 +60,9 @@ export const getFilteredProductList = gql`
   fragment productBaseData on Product {
     id
     name
+    inStock
     gallery
+    description
     prices {
       amount
       currency
@@ -75,6 +79,16 @@ export const getCategories = gql`
   query {
     categories {
       name
+    }
+  }
+`;
+
+export const productSubscription = gql`
+  query ($id: String!) {
+    product(id: $id) {
+      __typename
+      quantity @client
+      attribute @client
     }
   }
 `;

@@ -30,7 +30,7 @@ export default function Reducer(state = shopAppState, action) {
             0,
             state.cartItems.findIndex(
               (i) => i?.product?.id === action.payload?.product?.id
-            ) + 1
+            )
           )
           .concat(
             state.cartItems.slice(

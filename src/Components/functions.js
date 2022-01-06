@@ -2,12 +2,12 @@ export function handleAddToCart(component, _productData) {
   const price = _productData?.product?.prices.find(
     (p) => p?.currency === component.props.currency
   );
-  component.props.calculateTotal(price.amount);
+  component.props.calculateTotal(price?.amount);
   component.props.addToCart(_productData);
   const productData = localStorage.getItem(_productData?.product?.id);
   if (productData) {
-    let parsedData = JSON.parse(productData);
-    let qty = parsedData["quantity"];
+    const parsedData = JSON.parse(productData);
+    const qty = parsedData["quantity"];
     component.setState({ quantity: qty + 1 });
     parsedData["quantity"] = qty + 1;
     localStorage.setItem(_productData?.product?.id, JSON.stringify(parsedData));
@@ -51,6 +51,7 @@ export function handleQuantity(component, _sign, _id) {
         currentQuantity -= 1;
         if (currentQuantity === 0) {
           component.props.removeFromCart(component.props.data);
+          localState["attribute"] = null;
         } else {
           component.props.removeSingleItem(component.props.data);
         }

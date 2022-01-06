@@ -1,0 +1,10 @@
+fragment productBasicData on Product {
+  id
+  inStock
+  name
+  gallery
+  prices {
+    amount
+    currency
+  }
+}

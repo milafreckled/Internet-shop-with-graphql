@@ -10,6 +10,7 @@ import { client } from "./client";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import configureStore from "./redux/store";
+
 class App extends Component {
   render() {
     const { store, persistor } = configureStore();
