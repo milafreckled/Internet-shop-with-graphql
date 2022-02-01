@@ -29,6 +29,7 @@ export const Button = styled.button`
   order: 0;
   flex-grow: 0;
   font: var(--button-font);
+  cursor: pointer;
   &.view-bag-btn {
     background: #ffffff;
     border: 1px solid #1d1f22;
@@ -275,21 +276,20 @@ export const SwitchArrow = styled.img`
   position: absolute;
   width: 6px;
   height: 12px;
-  z-index: 1;
+  z-index: 2;
   &:hover {
-    transform: matrix(-1, 0, 0, 1, 0, 0);
     cursor: pointer;
   }
   &.right {
     right: 0;
-    left: 90%;
+    left: 85%;
     top: 50%;
     transform: translateY(-50%);
     bottom: 25%;
   }
   &.left {
     left: 20%;
-    right: 25%;
+    right: 20%;
     top: 50%;
     transform: translateY(-50%);
     bottom: 25%;
@@ -464,7 +464,12 @@ export const MiddleSection = styled.div`
 `;
 export const RightSection = styled.div`
     flex: 40%;
-    > img {
+    > a{
+      display: inline-block;
+      max-width: 350px;
+    }
+    > a img {
+      position: relative;
       width: 100%;
       height: 100%;
       max-width: 105px;

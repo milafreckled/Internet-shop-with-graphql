@@ -10,7 +10,12 @@ import {
 import addToCartBtn from "../images/add_to_cart.png";
 import { connect } from "react-redux";
 import { mapStateToProps } from "../redux/mapStateToProps";
-import { addToCart, calculateTotal } from "../redux/actions";
+import {
+  addToCart,
+  calculateTotal,
+  updateCart,
+  calculateQty,
+} from "../redux/actions";
 import { Link } from "react-router-dom";
 import { handleAddToCart } from "./functions";
 import currenciesMap from "../features/currenciesMap";
@@ -62,6 +67,9 @@ class ProductCard extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps, { addToCart, calculateTotal })(
-  ProductCard
-);
+export default connect(mapStateToProps, {
+  addToCart,
+  calculateTotal,
+  updateCart,
+  calculateQty,
+})(ProductCard);

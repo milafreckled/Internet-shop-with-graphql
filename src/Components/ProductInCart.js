@@ -20,6 +20,7 @@ import {
   removeFromCart,
   removeSingleItem,
   calculateTotal,
+  updateCart,
 } from "../redux/actions";
 import { sizeMap } from "../features/sizeMap";
 import leftArrow from "../images/arrow-left.png";
@@ -30,21 +31,20 @@ class ProductInCart extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      activeAttribute:
-        JSON.parse(localStorage.getItem(this.props.data.product.id))[
-          "attribute"
-        ] ?? "",
-      quantity:
-        JSON.parse(localStorage.getItem(this.props.data.product.id))[
-          "quantity"
-        ] ?? 0,
+      product: this.props.data,
+      quantity: this.props.data.quantity,
+      activeAttribute: this.props.data.attribute,
       pictureIdx: 0,
     };
   }
-
+  componentDidUpdate(prevProps) {
+    if (this.props.data.attribute !== prevProps.data.attribute) {
+      this.setState({ activeAttribute: this.props.data.attribute });
+    }
+  }
   render() {
-    const product = this.props.data?.product;
-    const pictureIdx = this.state.pictureIdx;
+    const { product, quantity, activeAttribute, pictureIdx } = this.state;
+    const { index, currency } = this.props;
     const picturesLength = product?.gallery?.length;
 
     return (
@@ -54,11 +54,8 @@ class ProductInCart extends PureComponent {
             <Brand>{product?.brand}</Brand>
             <Name>{product?.name}</Name>
             <PriceInCart>
-              {
-                product?.prices.find((p) => p.currency === this.props.currency)
-                  .amount
-              }
-              {currenciesMap[this.props.currency]}
+              {product?.prices.find((p) => p.currency === currency).amount}
+              {currenciesMap[currency]}
             </PriceInCart>
             <AttributesWrapper>
               {product?.attributes?.slice(0, 1).map((a) =>
@@ -66,14 +63,10 @@ class ProductInCart extends PureComponent {
                   ? a?.items.map((item) => (
                       <AttributeBox
                         onClick={() =>
-                          handleAttributeClick(
-                            this,
-                            product.id,
-                            item.displayValue
-                          )
+                          handleAttributeClick(this, index, item.displayValue)
                         }
                         className={
-                          item.displayValue === this.state.activeAttribute
+                          item.displayValue === activeAttribute
                             ? "active-color"
                             : ""
                         }
@@ -91,11 +84,7 @@ class ProductInCart extends PureComponent {
                             : ""
                         }
                         onClick={() =>
-                          handleAttributeClick(
-                            this,
-                            product.id,
-                            item.displayValue
-                          )
+                          handleAttributeClick(this, index, item.displayValue)
                         }
                       >
                         {sizeMap[item.displayValue] || item.displayValue}
@@ -104,11 +93,7 @@ class ProductInCart extends PureComponent {
                   : a?.items.map((item) => (
                       <AttributeBox
                         onClick={() =>
-                          handleAttributeClick(
-                            this,
-                            product.id,
-                            item.displayValue
-                          )
+                          handleAttributeClick(this, index, item.displayValue)
                         }
                       >
                         {item.displayValue}
@@ -120,14 +105,14 @@ class ProductInCart extends PureComponent {
           <MiddlePart>
             <div
               className="plus-box"
-              onClick={() => handleQuantity(this, "+", product?.id)}
+              onClick={() => handleQuantity(this, "+", index)}
             >
               <p> +</p>
             </div>
-            <p className="quantity">{this.state.quantity}</p>
+            <p className="quantity">{quantity}</p>
             <div
               className="minus-box"
-              onClick={() => handleQuantity(this, "-", product?.id)}
+              onClick={() => handleQuantity(this, "-", index)}
             >
               <p> -</p>
             </div>
@@ -183,4 +168,5 @@ export default connect(mapStateToProps, {
   removeFromCart,
   removeSingleItem,
   calculateTotal,
+  updateCart,
 })(ProductInCart);

@@ -1,75 +1,108 @@
 export function handleAddToCart(component, _productData) {
+  const { id } = _productData?.product;
+  const attribute = component.state.activeAttribute || "";
   const price = _productData?.product?.prices.find(
     (p) => p?.currency === component.props.currency
   );
   component.props.calculateTotal(price?.amount);
-  component.props.addToCart(_productData);
-  const productData = localStorage.getItem(_productData?.product?.id);
-  if (productData) {
-    const parsedData = JSON.parse(productData);
-    const qty = parsedData["quantity"];
-    component.setState({ quantity: qty + 1 });
-    parsedData["quantity"] = qty + 1;
-    localStorage.setItem(_productData?.product?.id, JSON.stringify(parsedData));
+  const cartItemsCopy = [...component.props.cartItems];
+  const current = cartItemsCopy.find(
+    (item) => item.id === id && item.attribute === attribute
+  );
+  if (current) {
+    const idx = cartItemsCopy.indexOf(current);
+    const copyOfCurrent = {
+      ...current,
+      quantity: current.quantity + 1,
+    };
+    cartItemsCopy[idx] = copyOfCurrent;
+    component.props.updateCart(cartItemsCopy);
   } else {
-    localStorage.setItem(
-      _productData?.product?.id,
-      '{"quantity": 1, "attribute": null}'
+    const copyOfCurrent = {
+      ..._productData.product,
+      quantity: _productData.product.quantity + 1,
+      attribute: attribute,
+    };
+    component.props.addToCart(copyOfCurrent);
+  }
+  component.props.calculateQty();
+  console.log(component.props.cartItems);
+}
+
+export function handleAttributeClick(component, index, attribute, inCart) {
+  if (inCart) {
+    const cartItemsCopy = [...component.props.cartItems];
+    const productWithAttribute = cartItemsCopy.find(
+      (item) =>
+        item.attribute === attribute && item.id === cartItemsCopy[index].id
     );
+    if (productWithAttribute) {
+      const foundIndex = cartItemsCopy.indexOf(productWithAttribute);
+      const quantity = cartItemsCopy[index].quantity;
+      const productDataNew = {
+        ...productWithAttribute,
+        quantity: productWithAttribute.quantity + quantity,
+      };
+      const productDataOld = {
+        ...cartItemsCopy[index],
+        quantity: 0,
+      };
+      cartItemsCopy[foundIndex] = productDataNew;
+      cartItemsCopy[index] = productDataOld;
+      component.props.updateCart(cartItemsCopy);
+    } else if (cartItemsCopy[index].attribute !== attribute) {
+      const productData = {
+        ...cartItemsCopy[index],
+        attribute: attribute,
+      };
+      cartItemsCopy[index] = productData;
+      console.log("No product with this attribute!");
+      component.props.updateCart(cartItemsCopy);
+    } else {
+      const productData = {
+        ...productWithAttribute,
+        attribute: null,
+      };
+      cartItemsCopy[index] = productData;
+      component.props.updateCart(cartItemsCopy);
+    }
+  } else {
+    component.setState({ activeAttribute: attribute });
   }
 }
 
-export function handleAttributeClick(component, id, attribute) {
-  const localState = JSON.parse(localStorage.getItem(id));
-  localState["attribute"] = attribute;
-  localStorage.setItem(id, JSON.stringify(localState));
-  component.setState({ activeAttribute: attribute });
-}
-
-export function handleQuantity(component, _sign, _id) {
-  const localState = JSON.parse(localStorage.getItem(_id));
-  let currentQuantity = localState["quantity"];
+export function handleQuantity(component, _sign, idx) {
+  const cartItemsCopy = [...component.props.cartItems];
+  const current = cartItemsCopy[idx];
+  console.log("Current: " + current);
+  const priceField = current.prices.find(
+    (p) => p?.currency === component.props.currency
+  );
+  let productPrice = priceField?.amount;
   switch (_sign) {
     case "+": {
-      if (currentQuantity) {
-        currentQuantity += 1;
-        localState["quantity"] = currentQuantity;
-        localStorage.setItem(_id, JSON.stringify(localState));
-        component.props.addToCart(component.props.data);
-        component.props.calculateTotal(
-          parseFloat(
-            component.props.data?.product?.prices.find(
-              (p) => p.currency === component.props.currency
-            ).amount
-          )
-        );
-      }
+      const updatedProduct = { ...current, quantity: current.quantity + 1 };
+      console.log("Updated product: " + updatedProduct);
+      component.setState({ quantity: component.state.quantity + 1 });
+      cartItemsCopy[idx] = updatedProduct;
+      component.props.updateCart(cartItemsCopy);
       break;
     }
     case "-": {
-      if (currentQuantity && currentQuantity > 0) {
-        currentQuantity -= 1;
-        if (currentQuantity === 0) {
-          component.props.removeFromCart(component.props.data);
-          localState["attribute"] = null;
-        } else {
-          component.props.removeSingleItem(component.props.data);
-        }
-        localState["quantity"] = currentQuantity;
-        localStorage.setItem(_id, JSON.stringify(localState));
-        component.props.calculateTotal(
-          parseFloat(
-            -1 *
-              component.props.data?.product?.prices.find(
-                (p) => p.currency === component.props.currency
-              ).amount
-          )
-        );
+      const updatedProduct = { ...current, quantity: current.quantity - 1 };
+      component.setState({ quantity: component.state.quantity - 1 });
+      if (component.state.quantity === 0) {
+        component.props.removeFromCart(idx);
+      } else {
+        cartItemsCopy[idx] = updatedProduct;
+        component.props.updateCart(cartItemsCopy);
       }
+      productPrice *= -1;
       break;
     }
     default:
       return;
   }
-  component.setState({ quantity: currentQuantity });
+  component.props.calculateTotal(productPrice);
+  component.props.calculateQty();
 }

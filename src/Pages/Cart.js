@@ -11,32 +11,29 @@ import { Link } from "react-router-dom";
 class Cart extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = { items: [] }; // unique items from cart items
+    this.state = { items: this.props.cartItems }; // unique items from cart items
   }
 
-  componentDidMount() {
-    const uniqueItems = uniqBy(this.props.cartItems, (obj) => obj?.product?.id);
-    uniqueItems.forEach((c) => {
-      getProductById(c?.product.id).then(({ data }) =>
-        this.setState({
-          items: [...this.state.items, data],
-        })
-      );
-    });
+  componentDidUpdate(prevProps) {
+    if (this.props.cartItems !== prevProps.items) {
+      this.setState({ items: this.props.cartItems });
+    }
   }
 
   render() {
+    const { items } = this.state;
+    const { cartItemsQty } = this.props;
     return (
       <>
         <Navigation />
         <CartWrapper>
           <CartTitle>CART</CartTitle>
           <Divider />
-          {this.state.items.length > 0 ? (
-            this.state.items.map((item, idx) => (
+          {Number(cartItemsQty) > 0 ? (
+            items.map((item, idx) => (
               <>
-                <ProductInCart data={item} key={item?.product?.id} />
-                {idx !== this.state.items.length - 1 && <Divider />}
+                <ProductInCart index={idx} data={item} key={item?.id} />
+                {idx !== items.length - 1 && <Divider />}
               </>
             ))
           ) : (

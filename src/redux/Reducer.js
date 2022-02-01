@@ -1,7 +1,7 @@
 const shopAppState = {
   activeCategory: "all", // all / clothes / tech
   cartItems: [],
-  cartItemsNumber: 0,
+  cartItemsQty: 0,
   currency: "USD",
   total: 0,
 };
@@ -17,9 +17,15 @@ export default function Reducer(state = shopAppState, action) {
     case "REMOVE_FROM_CART": {
       return {
         ...state,
-        cartItems: state.cartItems.filter(
-          (i) => i?.product?.id !== action.payload?.product?.id
-        ),
+        cartItems: state.cartItems
+          .slice(0, action.payload.index + 1)
+          .concat(state.cartItems.slice(action.payload.idx + 1)),
+      };
+    }
+    case "UPDATE_CART": {
+      return {
+        ...state,
+        cartItems: [...action.payload],
       };
     }
     case "REMOVE_SINGLE_ITEM": {
@@ -39,6 +45,15 @@ export default function Reducer(state = shopAppState, action) {
               ) + 1
             )
           ),
+      };
+    }
+    case "CALCULATE_QUANTITY": {
+      return {
+        ...state,
+        cartItemsQty: state.cartItems.reduce(
+          (sum, item) => sum + item.quantity,
+          0
+        ),
       };
     }
     case "CALCULATE_TOTAL": {
@@ -72,3 +87,5 @@ export default function Reducer(state = shopAppState, action) {
     }
   }
 }
+// implement  update Quantity and Attribute:
+// state.cartItems[action.payload.index].attribute = action.payload.attribute

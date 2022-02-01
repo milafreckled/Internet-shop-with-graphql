@@ -15,60 +15,63 @@ import {
   removeFromCart,
   removeSingleItem,
   calculateTotal,
+  updateCart,
+  calculateQty,
 } from "../redux/actions";
 import { sizeMap } from "../features/sizeMap";
+import { Link } from "react-router-dom";
 import { handleAttributeClick, handleQuantity } from "./functions";
 
 class ProductInOverlay extends PureComponent {
   constructor(props) {
     super(props);
-
     this.state = {
-      quantity:
-        JSON.parse(localStorage.getItem(this.props.data.product.id))[
-          "quantity"
-        ] ?? 0,
-      activeAttribute:
-        JSON.parse(localStorage.getItem(this.props.data.product.id))[
-          "attribute"
-        ] ?? "",
+      product: this.props.data,
+      quantity: this.props.data.quantity,
     };
   }
-
+  componentDidUpdate(prevProps) {
+    if (this.props.data !== prevProps.data) {
+      this.setState({
+        product: this.props.data,
+        quantity: this.props.data.quantity,
+      });
+    }
+  }
   render() {
-    const { currency } = this.props;
-    const { activeAttribute, quantity } = this.state;
+    const { currency, index } = this.props;
     const currencySign = currenciesMap[currency];
-    const product = this.props.data?.product;
+    const { attribute, name, brand, prices, id, attributes, gallery } =
+      this.state.product;
+    const { quantity } = this.state;
     return (
       quantity > 0 && (
-        <ProductWrapper key={product?.id}>
+        <ProductWrapper key={id}>
           <LeftSection>
             <p className="product-name">
-              {product?.brand}
+              {brand}
               <br />
-              {product?.name}
+              {name}
             </p>
             <p className="product-price">
-              {product?.prices.find((p) => p.currency === currency).amount}
+              {prices.find((p) => p.currency === currency).amount}
               {currencySign}
             </p>
             <div className="attributes-wrapper">
-              {product?.attributes?.slice(0, 1).map((a) =>
+              {attributes?.slice(0, 1).map((a) =>
                 a.name === "Color"
                   ? a?.items.map((item) => (
                       <div
                         onClick={() =>
                           handleAttributeClick(
                             this,
-                            product.id,
-                            item.displayValue
+                            index,
+                            item.displayValue,
+                            true
                           )
                         }
                         className={
-                          item.displayValue === activeAttribute
-                            ? "active-color"
-                            : ""
+                          item.displayValue === attribute ? "active-color" : ""
                         }
                         style={{
                           backgroundColor: item.displayValue.toLowerCase(),
@@ -78,13 +81,14 @@ class ProductInOverlay extends PureComponent {
                   : a?.items.map((item) => (
                       <div
                         className={
-                          item.displayValue === activeAttribute ? "active" : ""
+                          item.displayValue === attribute ? "active" : ""
                         }
                         onClick={() =>
                           handleAttributeClick(
                             this,
-                            product.id,
-                            item.displayValue
+                            index,
+                            item.displayValue,
+                            true
                           )
                         }
                       >
@@ -97,20 +101,22 @@ class ProductInOverlay extends PureComponent {
           <MiddleSection>
             <div
               className="plus-box"
-              onClick={() => handleQuantity(this, "+", product?.id)}
+              onClick={() => handleQuantity(this, "+", index)}
             >
               +
             </div>
             <p className="quantity">{quantity}</p>
             <div
               className="minus-box"
-              onClick={() => handleQuantity(this, "-", product?.id)}
+              onClick={() => handleQuantity(this, "-", index)}
             >
               -
             </div>
           </MiddleSection>
           <RightSection>
-            <img src={product?.gallery[0]} alt={product?.name} />
+            <Link to={`/product/${id}/${index}`}>
+              <img src={gallery[0]} alt={name} />
+            </Link>
           </RightSection>
         </ProductWrapper>
       )
@@ -127,4 +133,6 @@ export default connect(mapStateToProps, {
   removeFromCart,
   removeSingleItem,
   calculateTotal,
+  updateCart,
+  calculateQty,
 })(ProductInOverlay);

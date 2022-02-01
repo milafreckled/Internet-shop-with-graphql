@@ -18,7 +18,12 @@ import Navigation from "../Components/Navigation";
 import { sizeMap } from "../features/sizeMap";
 import { connect } from "react-redux";
 import { mapStateToProps } from "../redux/mapStateToProps";
-import { addToCart, calculateTotal } from "../redux/actions";
+import {
+  addToCart,
+  calculateTotal,
+  updateCart,
+  calculateQty,
+} from "../redux/actions";
 import currenciesMap from "../features/currenciesMap";
 import { handleAttributeClick, handleAddToCart } from "../Components/functions";
 
@@ -30,9 +35,9 @@ class ProductDescription extends PureComponent {
     this.descriptionRef = React.createRef();
     this.state = {
       id: productId,
+      index: -1,
       productData: null,
       activeAttribute: "",
-      quantity: 0,
       pictureIdx: 0,
       sideImages: [],
     };
@@ -42,23 +47,39 @@ class ProductDescription extends PureComponent {
     getProductById(this.state.id).then(({ data }) => {
       this.setState({
         productData: data,
-        quantity: data.product?.quantity,
-        activeAttribute: data.product?.attribute,
         sideImages: data.product?.gallery.filter(
           (_, idx) => idx !== this.state.pictureIdx
         ),
       });
+      const current = this.props.cartItems.find(
+        (item) => item.id === this.state.id
+      );
+      if (current) {
+        this.setState({ index: this.props.cartItems.indexOf(current) });
+      } else {
+        this.setState({ index: 0 });
+      }
       if (data.product?.description) {
         this.descriptionRef.current.innerHTML = data.product.description;
       }
     });
   }
-
+  componentDidUpdate(prevProps) {
+    if (this.props.cartItems !== prevProps.cartItems) {
+      const { id, activeAttribute } = this.state;
+      const current = this.props.cartItems.find(
+        (item) => item.id === id && item.attribute === activeAttribute
+      );
+      if (current) {
+        this.setState({ index: this.props.cartItems.indexOf(current) });
+      }
+    }
+  }
   render() {
     const product = this.state.productData?.product;
     const currencySign = currenciesMap[this.props.currency];
-    const { currency } = this.props;
-    const { pictureIdx, activeAttribute, productData, sideImages, id } =
+    const { currency, cartItems } = this.props;
+    const { pictureIdx, activeAttribute, productData, sideImages, index } =
       this.state;
     return (
       <>
@@ -88,9 +109,14 @@ class ProductDescription extends PureComponent {
                       ? a?.items?.map((item) => (
                           <AttributeBox
                             key={item?.displayValue}
-                            onClick={() =>
-                              handleAttributeClick(this, id, item.displayValue)
-                            }
+                            onClick={() => {
+                              handleAttributeClick(
+                                this,
+                                index,
+                                item.displayValue,
+                                false
+                              );
+                            }}
                             className={
                               item.displayValue === activeAttribute
                                 ? "active"
@@ -106,9 +132,14 @@ class ProductDescription extends PureComponent {
                             style={{
                               backgroundColor: item.displayValue.toLowerCase(),
                             }}
-                            onClick={() =>
-                              handleAttributeClick(this, id, item.displayValue)
-                            }
+                            onClick={() => {
+                              handleAttributeClick(
+                                this,
+                                index,
+                                item.displayValue,
+                                false
+                              );
+                            }}
                             className={
                               item.displayValue === activeAttribute
                                 ? "active-color"
@@ -126,7 +157,11 @@ class ProductDescription extends PureComponent {
               {currencySign}
             </Price>
 
-            <AddToCartBtn onClick={() => handleAddToCart(this, productData)}>
+            <AddToCartBtn
+              onClick={() => {
+                handleAddToCart(this, productData);
+              }}
+            >
               Add to cart
             </AddToCartBtn>
             <Description ref={this.descriptionRef}></Description>
@@ -136,6 +171,9 @@ class ProductDescription extends PureComponent {
     );
   }
 }
-export default connect(mapStateToProps, { addToCart, calculateTotal })(
-  ProductDescription
-);
+export default connect(mapStateToProps, {
+  addToCart,
+  calculateTotal,
+  updateCart,
+  calculateQty,
+})(ProductDescription);

@@ -75,7 +75,7 @@ class Navigation extends PureComponent {
   }
   render() {
     const { arrowState, overlayVisible, currencies, categories } = this.state;
-    const { activeCategory, cartItems, currency } = this.props;
+    const { activeCategory, cartItems, currency, cartItemsQty } = this.props;
     const { handleCategory, handleCurrency, handleArrow } = this;
     return (
       <Navbar>
@@ -147,9 +147,7 @@ class Navigation extends PureComponent {
               })
             }
           >
-            {cartItems?.length > 0 && (
-              <CartBadge>{cartItems?.length}</CartBadge>
-            )}
+            {cartItemsQty > 0 && <CartBadge>{cartItemsQty}</CartBadge>}
             <img src={cart} alt="shopping-cart" />
             {overlayVisible && <CartOverlay />}
           </CartButton>

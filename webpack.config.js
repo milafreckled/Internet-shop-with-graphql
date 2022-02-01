@@ -14,6 +14,10 @@ module.exports = function (_env, argv) {
       filename: "assets/js/[name].[contenthash:8].js",
       publicPath: "/",
     },
+    devServer: {
+      inline: false,
+      contentBase: "./dist",
+  },
     module: {
       rules: [
         {
