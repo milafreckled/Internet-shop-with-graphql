@@ -26,7 +26,6 @@ export function handleAddToCart(component, _productData) {
     component.props.addToCart(copyOfCurrent);
   }
   component.props.calculateQty();
-  console.log(component.props.cartItems);
 }
 
 export function handleAttributeClick(component, index, attribute, inCart) {
@@ -56,7 +55,6 @@ export function handleAttributeClick(component, index, attribute, inCart) {
         attribute: attribute,
       };
       cartItemsCopy[index] = productData;
-      console.log("No product with this attribute!");
       component.props.updateCart(cartItemsCopy);
     } else {
       const productData = {
