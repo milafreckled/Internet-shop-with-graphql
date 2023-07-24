@@ -1,4 +1,4 @@
-const shopAppState = {
+export const shopAppState = {
   activeCategory: "all", // all / clothes / tech
   cartItems: [],
   cartItemsQty: 0,

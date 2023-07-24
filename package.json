@@ -26,7 +26,7 @@
     "webpack-dev-server": "3.11.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start --openssl-legacy-provider",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -67,7 +67,6 @@
     "style-loader": "^3.3.1",
     "styled-components": "^5.3.3",
     "url-loader": "^4.1.1",
-    "webpack": "4.44.2",
     "webpack-cli": "^4.9.1"
   }
 }

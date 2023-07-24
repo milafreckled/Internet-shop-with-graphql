@@ -10,6 +10,7 @@ module.exports = function (_env, argv) {
     devtool: isDevelopment && "cheap-module-source-map",
     entry: "./src/index.js",
     output: {
+      hashFunction: 'md5',
       path: path.resolve(__dirname, "dist"),
       filename: "assets/js/[name].[contenthash:8].js",
       publicPath: "/",
